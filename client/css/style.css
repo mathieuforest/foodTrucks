@@ -189,11 +189,9 @@ figure {
   font-weight: 400;
   color: rgba(0, 0, 0, 0.6);
 }
-@media screen and (max-width: 768px) {
-  #fh5co-aside .fh5co-footer {
-    position: relative;
-    bottom: 0;
-  }
+#fh5co-aside .fh5co-footer {
+  position: relative;
+  bottom: 0;
 }
 #fh5co-aside .fh5co-footer span {
   display: block;
@@ -226,29 +224,19 @@ figure {
   -o-transition: 0.5s;
   transition: 0.5s;
 }
-@media screen and (max-width: 1200px) {
-  #fh5co-main {
-    width: 70%;
-  }
-}
-@media screen and (max-width: 768px) {
-  #fh5co-main {
-    width: 100%;
-  }
+#fh5co-main {
+  width: 100%;
 }
 #fh5co-main .fh5co-narrow-content {
   position: absolute;
   top: 0;
-  left: 300px;
-  width: 80%;
+  left: 0;
   margin: 0 auto;
   padding: 4em 0;
 }
-@media screen and (max-width: 768px) {
-  #fh5co-main .fh5co-narrow-content {
-    width: 100%;
-    padding: 3.5em 1em;
-  }
+#fh5co-main .fh5co-narrow-content {
+  width: 100%;
+  padding: 3.5em 1em;
 }
 
 body.offcanvas {
@@ -274,14 +262,22 @@ body.offcanvas #fh5co-main, body.offcanvas .fh5co-nav-toggle {
   transform: translateX(270px);
 }
 
-.work-item {
-  margin-bottom: 30px;
+.toggle-view {
+  position: absolute;
+  z-index: 99999;
+  top: 20px;
+  right: 20px;
 }
-.work-item a {
+.truck-item {
+  margin-bottom: 30px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 30px 15px;
+}
+.truck-item a {
   border: none;
   text-align: center;
 }
-.work-item a img {
+.truck-item a img {
   margin-bottom: 10px;
   float: left;
   border: 10px solid transparent;
@@ -289,20 +285,20 @@ body.offcanvas #fh5co-main, body.offcanvas .fh5co-nav-toggle {
   -o-transition: 0.5s;
   transition: 0.5s;
 }
-.work-item a h3 {
+.truck-item a h3 {
   font-size: 20px;
   color: #000;
   margin-bottom: 10px;
 }
-.work-item a p {
+.truck-item a p {
   font-size: 14px;
-  color: #cccccc;
+  color: #888;
   margin-bottom: 0;
 }
-.work-item a:hover, .work-item a:active, .work-item a:focus {
+.truck-item a:hover, .truck-item a:active, .truck-item a:focus {
   text-decoration: none;
 }
-.work-item a:hover img, .work-item a:active img, .work-item a:focus img {
+.truck-item a:hover img, .truck-item a:active img, .truck-item a:focus img {
   border: 10px solid #000;
 }
 
@@ -809,15 +805,8 @@ body.offcanvas #fh5co-main, body.offcanvas .fh5co-nav-toggle {
 }
 
 .btn {
-  margin-right: 4px;
   margin-bottom: 4px;
   font-family: "Roboto", Arial, sans-serif;
-  font-size: 18px;
-  font-weight: 400;
-  -webkit-border-radius: 0px;
-  -moz-border-radius: 0px;
-  -ms-border-radius: 0px;
-  border-radius: 0px;
   -webkit-transition: 0.5s;
   -o-transition: 0.5s;
   transition: 0.5s;
@@ -1067,17 +1056,11 @@ body.offcanvas #fh5co-main, body.offcanvas .fh5co-nav-toggle {
   z-index: 9999;
   cursor: pointer;
   opacity: 1;
-  visibility: hidden;
+  visibility: visible;
   padding: 20px;
   -webkit-transition: 0.5s;
   -o-transition: 0.5s;
   transition: 0.5s;
-}
-@media screen and (max-width: 768px) {
-  .fh5co-nav-toggle {
-    opacity: 1;
-    visibility: visible;
-  }
 }
 
 @media screen and (max-width: 480px) {

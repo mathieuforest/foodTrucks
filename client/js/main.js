@@ -2,21 +2,18 @@
 	
 	'use strict';
 
+	var gridView = true;
+
 	window.getLots = function(){
 
 		var mapOptions = {
-            // How zoomed in you want the map to start at (always required)
             zoom: 15,
-
-            // The latitude and longitude to center the map (always required)
-            center: new google.maps.LatLng(45.5016889, -73.56725599999999), // New York
-
-            // How you would like to style the map. 
-            // This is where you would paste any style found on Snazzy Maps.
+            center: new google.maps.LatLng(45.5016889, -73.56725599999999),
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            disableDefaultUI: true,
             styles: [{"featureType":"administrative","elementType":"all","stylers":[{"saturation":"-100"}]},{"featureType":"administrative.province","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"landscape","elementType":"all","stylers":[{"saturation":-100},{"lightness":65},{"visibility":"on"}]},{"featureType":"poi","elementType":"all","stylers":[{"saturation":-100},{"lightness":"50"},{"visibility":"simplified"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":"-100"}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"all","stylers":[{"lightness":"30"}]},{"featureType":"road.local","elementType":"all","stylers":[{"lightness":"40"}]},{"featureType":"transit","elementType":"all","stylers":[{"saturation":-100},{"visibility":"simplified"}]},{"featureType":"water","elementType":"geometry","stylers":[{"hue":"#ffff00"},{"lightness":-25},{"saturation":-97}]},{"featureType":"water","elementType":"labels","stylers":[{"lightness":-25},{"saturation":-100}]}]
         };
 		var map;
-
 		$.ajax({
 			type : 'GET',
 			url : '/api/trucks',
@@ -40,9 +37,9 @@
 			          icon: truck.normal_pin_url
 			        });
 
-					var element = '<div class="col-md-4 col-sm-6 col-xs-6 col-xxs-12 work-item">'
+					var element = '<div class="col-md-4 col-sm-6 col-xs-6 col-xxs-12 truck-item">'
 						element += '<a href="work.html">'
-						element += '<img src="https://lotmom.imgix.net/'+truck.truck_img+'?crop=faces&fit=crop&h=190&w=320" alt="'+truck.name+'" class="img-responsive">'
+						element += '<img src="https://lotmom.imgix.net/'+truck.truck_img+'?crop=faces&fit=crop&h=190&w=460" alt="'+truck.name+'" class="img-responsive">'
 						element += '<h3 class="fh5co-work-title">'+truck.name+'</h3>'
 						element += '<p>'+truck.address+'</p>'
 						element += '<p>'+truck.date+'</p>'
@@ -55,6 +52,12 @@
 			fail : function (){
 			}
 		});
+	}
+
+	var idGridView = function(){
+		if(gridView === true){
+
+		}
 	}
 
 	var isMobile = {
