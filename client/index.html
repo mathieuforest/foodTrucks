@@ -77,13 +77,13 @@
 
 		<div id="fh5co-main">
 			<div class="btn-group toggle-view" role="group">
-				<button type="button" class="btn btn-secondary list-view">List View</button>
-				<button type="button" class="btn btn-secondary map-view">Map View</button>
+				<button type="button" class="btn btn-secondary list-view toggleGridView">List View</button>
+				<button type="button" class="btn btn-secondary map-view toggleMapView">Map View</button>
 			</div>
 			<div id="map"></div>
 			<div class="fh5co-narrow-content">
 				<h2 class="fh5co-heading animate-box" data-animate-effect="fadeInLeft">Commander votre Bouffe</h2>
-				<div id="trucks" class="row animate-box" data-animate-effect="fadeInLeft">
+				<div id="gridView" class="row animate-box" data-animate-effect="fadeInLeft">
 				</div>
 			</div>
 			
@@ -105,7 +105,7 @@
 	<!-- Counters -->
 	<script src="client/js/jquery.countTo.js"></script>
 	<!-- Google Map -->
-	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0zqRr_OrfUXBrkWSo6PPqx8ZnY8G3sR0&callback=getLots"></script>
+	<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0zqRr_OrfUXBrkWSo6PPqx8ZnY8G3sR0&callback=getTrucks"></script>
 	
 	<!-- MAIN JS -->
 	<script src="client/js/main.js"></script>

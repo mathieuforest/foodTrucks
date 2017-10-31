@@ -270,7 +270,7 @@ body.offcanvas #fh5co-main, body.offcanvas .fh5co-nav-toggle {
 }
 .truck-item {
   margin-bottom: 30px;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.8);
   padding: 30px 15px;
 }
 .truck-item a {
@@ -1099,6 +1099,10 @@ body.offcanvas #fh5co-main, body.offcanvas .fh5co-nav-toggle {
 
 .js .animate-box {
   opacity: 0;
+}
+
+#gridView {
+  overflow: scroll;
 }
 
 /*# sourceMappingURL=style.css.map */

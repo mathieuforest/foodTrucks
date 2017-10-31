@@ -2,9 +2,9 @@
 	
 	'use strict';
 
-	var gridView = true;
+	var gridView = true, mapView = false;
 
-	window.getLots = function(){
+	window.getTrucks = function(){
 
 		var mapOptions = {
             zoom: 15,
@@ -46,18 +46,12 @@
 						element += '<p>'+truck.formatted_date+'</p>'
 						element += '</a>'
 						element += '</div>'
-					$('#trucks').append(element);	
+					$('#gridView').append(element);	
 				})
 			},
 			fail : function (){
 			}
 		});
-	}
-
-	var idGridView = function(){
-		if(gridView === true){
-
-		}
 	}
 
 	var isMobile = {
@@ -83,12 +77,15 @@
 
 	var fullHeight = function() {
 
-		// if ( !isMobile.any() ) {
+		$('#gridView').css('height', $(window).height());
+		$(window).resize(function(){
+			$('#gridView').css('height', $(window).height());
+		});
+
+		$('.js-fullheight').css('height', $(window).height());
+		$(window).resize(function(){
 			$('.js-fullheight').css('height', $(window).height());
-			$(window).resize(function(){
-				$('.js-fullheight').css('height', $(window).height());
-			});
-		// }
+		});
 
 	};
 
@@ -213,7 +210,6 @@
 
 		$(window).scroll(function(){
 			if ( $('body').hasClass('offcanvas') ) {
-
     			$('body').removeClass('offcanvas');
     			$('.js-fh5co-nav-toggle').removeClass('active');
 			
@@ -221,6 +217,20 @@
 		});
 
 	};
+
+	$(document).on('click', '.toggleGridView', function(){
+		if(gridView===false){
+			gridView = true;
+			mapView = false;
+			$('#gridView').toggle();
+		}
+	}).on('click', '.toggleMapView', function(){
+		if(mapView===false){
+			gridView = false;
+			mapView = true;
+			$('#gridView').toggle();
+		}
+	});
 
 	// Document on load.
 	$(function(){

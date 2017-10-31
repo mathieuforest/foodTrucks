@@ -6,6 +6,7 @@ var fs   = require("fs");
 var multer  = require('multer'); //mutipart form data
 var upload = multer({ dest: 'uploads/' })
 var controlleurTrucks = require('./api/trucks')
+var controlleurTruck = require('./api/truck')
 
 var app = express();
 var server = http.createServer(app);
@@ -30,4 +31,13 @@ app.get('/api/trucks', function(req, res) {
 		}
 	});
 });
-	
+
+app.get('/api/truck', function(req, res) {
+	controlleurTruck.truck(req,res, function(err, response){
+		if(!err){
+			res.header('Content-type','application/json');
+			res.header('Charset','utf8');
+			res.send(JSON.stringify(response));
+		}
+	});
+});
