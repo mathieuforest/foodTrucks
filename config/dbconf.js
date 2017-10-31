@@ -3,7 +3,7 @@ var dbconfig = {
         'host' : 'localhost',
         'user' : 'root',
         'password' : '',
-        'database' : 'bdfilms',
+        'database' : 'foodTrucks',
         'supportBigNumbers' : true
 };
 module.exports.dbconfig=dbconfig;

@@ -36,11 +36,10 @@
 			          title: truck.name,
 			          icon: truck.normal_pin_url
 			        });
-
 					var element = '<div class="col-md-4 col-sm-6 col-xs-6 col-xxs-12 truck-item">'
-						element += '<a href="work.html">'
+						element += '<a href="#" data-truckId="'+truck.truck_id+'">'
 						element += '<img src="https://lotmom.imgix.net/'+truck.truck_img+'?crop=faces&fit=crop&h=190&w=460" alt="'+truck.name+'" class="img-responsive">'
-						element += '<h3 class="fh5co-work-title">'+truck.name+'</h3>'
+						element += '<h3 class="fh5co-work-title">'+truck.truck_name+'</h3>'
 						element += '<p>'+truck.address+'</p>'
 						element += '<p>'+truck.date+'</p>'
 						element += '<p>'+truck.formatted_date+'</p>'
@@ -48,6 +47,39 @@
 						element += '</div>'
 					$('#gridView').append(element);	
 				})
+			},
+			fail : function (){
+			}
+		});
+	}
+
+	window.getTruckMenu = function(truckId){
+		$.ajax({
+			type : 'GET',
+			url : '/api/truck/'+truckId+'/menu',
+			dataType : 'json',
+			contentType : false,
+			processData : false,
+			beforeSend: function(){
+				console.log('Loading...')
+			},
+			success : function (truckMenuItems) {
+				var menu = '';
+				truckMenuItems.map(truckMenuItem => {
+					menu += '<form>'
+					menu += '<h3>'+truckMenuItem.name+'</h3>'
+					menu += '<p>'+truckMenuItem.desc+'</p>'
+					menu += '<p>Quantité: <input name="qte-'+truckMenuItem.name+'" type="number"/></p>'
+					menu += '</form>'
+				})
+				$("#myModal")
+				.find('.modal-body')
+				.html(menu);
+
+				$("#myModal").modal('show');
+
+				
+
 			},
 			fail : function (){
 			}
@@ -230,6 +262,8 @@
 			mapView = true;
 			$('#gridView').toggle();
 		}
+	}).on('click', 'a[data-truckId]', function(){
+		getTruckMenu($(this).attr("data-truckId"))
 	});
 
 	// Document on load.

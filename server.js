@@ -23,7 +23,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/api/trucks', function(req, res) {
-	controlleurTrucks.trucks(req,res, function(err, response){
+	controlleurTrucks.trucks(req, res, function(err, response){
 		if(!err){
 			res.header('Content-type','application/json');
 			res.header('Charset','utf8');
@@ -32,8 +32,9 @@ app.get('/api/trucks', function(req, res) {
 	});
 });
 
-app.get('/api/truck', function(req, res) {
-	controlleurTruck.truck(req,res, function(err, response){
+app.get('/api/truck/:id/menu', function(req, res) {
+	var id = req.params.id;
+	controlleurTruck.truck(req, res, id, function(err, response){
 		if(!err){
 			res.header('Content-type','application/json');
 			res.header('Charset','utf8');
