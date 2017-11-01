@@ -42,3 +42,14 @@ app.get('/api/truck/:id/menu', function(req, res) {
 		}
 	});
 });
+
+app.post('/api/truck/:id/order', function(req, res) {
+	var id = req.params.id;
+	controlleurTruck.truck(req, res, id, function(err, response){
+		if(!err){
+			res.header('Content-type','application/json');
+			res.header('Charset','utf8');
+			res.send(JSON.stringify(response));
+		}
+	});
+});

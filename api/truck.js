@@ -1,13 +1,29 @@
 var dbconf = require('./../config/dbconf');
 
-module.exports.truck=function (req, res, id, callback){
+module.exports.truck=function (req, res, truck_id, callback){
     switch(req.method){
         case "GET" :
-            var requete="SELECT * FROM truckMenu WHERE id=" + id;
-            dbconf.connection.execute(requete,function(err, data) {
+            var requeteDesc="SELECT * FROM foodTrucks WHERE id=" + truck_id;
+            var requeteMenu="SELECT * FROM truckMenu WHERE truck_id=" + truck_id;
+            
+            dbconf.connection.execute(requeteDesc, function(err, descData) {
                 if (err) return callback(true);
-                callback(false, data);
-            });
+                dbconf.connection.execute(requeteMenu, function(err, menuData) {
+                    if (err) return callback(true);
+                    var result = {
+                        truck_desc: descData,
+                        truck_menu: menuData
+                    }
+                    callback(false, result);
+                });
+            }); 
+        break;
+        case "POST" :
+            console.log(req)
+            var requeteDesc="SELECT * FROM foodTrucks WHERE id=" + truck_id;
+            var requeteMenu="SELECT * FROM truckMenu WHERE truck_id=" + truck_id;
+            
+            
         break;
     }
 }

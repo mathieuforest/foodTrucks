@@ -7,7 +7,7 @@
 	window.getTrucks = function(){
 
 		var mapOptions = {
-            zoom: 15,
+            zoom: 14,
             center: new google.maps.LatLng(45.5016889, -73.56725599999999),
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             disableDefaultUI: true,
@@ -33,12 +33,16 @@
 					var marker = new google.maps.Marker({
 			          position: {lat: truck.lat, lng: truck.lng},
 			          map: map,
-			          title: truck.name,
-			          icon: truck.normal_pin_url
+			          title: truck.truck_name,
+			          icon: truck.normal_pin_url,
+			          clickable: true
+			        });
+			        marker.addListener('click', function() {
+			        	getTruckMenu(truck.truck_id)
 			        });
 					var element = '<div class="col-md-4 col-sm-6 col-xs-6 col-xxs-12 truck-item">'
 						element += '<a href="#" data-truckId="'+truck.truck_id+'">'
-						element += '<img src="https://lotmom.imgix.net/'+truck.truck_img+'?crop=faces&fit=crop&h=190&w=460" alt="'+truck.name+'" class="img-responsive">'
+						element += '<img src="https://lotmom.imgix.net/'+truck.truck_img+'?crop=faces&fit=crop&h=190&w=460" alt="'+truck.truck_name+'" class="img-responsive">'
 						element += '<h3 class="fh5co-work-title">'+truck.truck_name+'</h3>'
 						element += '<p>'+truck.address+'</p>'
 						element += '<p>'+truck.date+'</p>'
@@ -53,32 +57,66 @@
 		});
 	}
 
-	window.getTruckMenu = function(truckId){
+	window.getTruckMenu = function(truck_id){
 		$.ajax({
 			type : 'GET',
-			url : '/api/truck/'+truckId+'/menu',
+			url : '/api/truck/'+truck_id+'/menu',
 			dataType : 'json',
 			contentType : false,
 			processData : false,
 			beforeSend: function(){
 				console.log('Loading...')
 			},
-			success : function (truckMenuItems) {
-				var menu = '';
-				truckMenuItems.map(truckMenuItem => {
-					menu += '<form>'
-					menu += '<h3>'+truckMenuItem.name+'</h3>'
-					menu += '<p>'+truckMenuItem.desc+'</p>'
-					menu += '<p>Quantité: <input name="qte-'+truckMenuItem.name+'" type="number"/></p>'
-					menu += '</form>'
+			success : function (response) {
+				var orderForm = '<section>'
+				orderForm += '<h2>'+response.truck_desc[0].name+'</h2>'
+				orderForm += '<img src='+response.truck_desc[0].img_url+' width="100%" />'
+				orderForm += '<p>'+response.truck_desc[0].desc+'</p>'
+				orderForm += '</section>'
+				orderForm += '<form id="orderForm" data-truckId="'+truck_id+'">'
+				response.truck_menu.map(truckMenuItem => {
+					orderForm += '<section class="order-item">'
+					orderForm += '<h3>'+truckMenuItem.name+'</h3>'
+					orderForm += '<p>'+truckMenuItem.desc+'</p>'
+					orderForm += '<div class="input-group">'
+					orderForm += '<input name="qte-'+truckMenuItem.id+'" type="text" class="form-control" placeholder="Quantité" aria-describedby="basic-addon2">'
+					orderForm += '<span class="input-group-addon" id="basic-addon2">x '+truckMenuItem.price.toFixed(2)+' $</span>'
+					orderForm += '</div>'
+					orderForm += '</section>'
 				})
-				$("#myModal")
+				orderForm += '</form>'
+
+				$("#orderForm")
 				.find('.modal-body')
-				.html(menu);
+				.html(orderForm);
 
-				$("#myModal").modal('show');
+				$("#orderForm").modal('show');
 
-				
+			},
+			fail : function (){
+			}
+		});
+	}
+
+	window.submitOrderForm = function(){
+		var truck_id = $('form#orderForm').attr("data-truckId")
+		$.ajax({
+			type : 'POST',
+			url : '/api/truck/'+truck_id+'/order',
+			dataType : 'json',
+			contentType : false,
+			processData : false,
+			data: $('form#orderForm').serialize(),
+			beforeSend: function(){
+				console.log('Loading...')
+			},
+			success : function (response) {
+				console.log(response)
+
+				$("#orderForm")
+				.find('.modal-body')
+				.html('Order complete');
+
 
 			},
 			fail : function (){
@@ -264,6 +302,8 @@
 		}
 	}).on('click', 'a[data-truckId]', function(){
 		getTruckMenu($(this).attr("data-truckId"))
+	}).on('click', '#submitOrderForm', function() {
+		submitOrderForm()
 	});
 
 	// Document on load.
