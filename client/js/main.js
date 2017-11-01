@@ -26,7 +26,6 @@
 					document.getElementById('map'), 
 					mapOptions
 				);
-
 			},
 			success : function (trucks) {
 				JSON.parse(trucks).map(truck => {
@@ -53,6 +52,7 @@
 				})
 			},
 			fail : function (){
+
 			}
 		});
 	}
@@ -65,7 +65,7 @@
 			contentType : false,
 			processData : false,
 			beforeSend: function(){
-				console.log('Loading...')
+				
 			},
 			success : function (response) {
 				var orderForm = '<section>'
@@ -79,21 +79,49 @@
 					orderForm += '<h3>'+truckMenuItem.name+'</h3>'
 					orderForm += '<p>'+truckMenuItem.desc+'</p>'
 					orderForm += '<div class="input-group">'
-					orderForm += '<input name="qte-'+truckMenuItem.id+'" type="text" class="form-control" placeholder="Quantité" aria-describedby="basic-addon2">'
+					orderForm += '<input name="'+truckMenuItem.id+'" type="text" class="form-control" placeholder="Quantité" aria-describedby="basic-addon2">'
 					orderForm += '<span class="input-group-addon" id="basic-addon2">x '+truckMenuItem.price.toFixed(2)+' $</span>'
 					orderForm += '</div>'
 					orderForm += '</section>'
 				})
 				orderForm += '</form>'
 
-				$("#orderForm")
-				.find('.modal-body')
-				.html(orderForm);
+				var clientForm = '<h3>Infomations</h3>'
+				clientForm += '<form id="clientForm" data-truckId="'+truck_id+'">'
+				clientForm += '<section class="order-item">'
+				clientForm += '<div class="input-group">'
+				clientForm += '<input name="first-name" type="text" class="form-control" placeholder="Prénom" aria-describedby="basic-addon2">'
+				clientForm += '</div>'
+				clientForm += '<div class="input-group">'
+				clientForm += '<input name="last-name" type="text" class="form-control" placeholder="Nom de famille" aria-describedby="basic-addon2">'
+				clientForm += '</div>'
+				clientForm += '<div class="input-group">'
+				clientForm += '<textarea name="address" class="form-control" placeholder="Adresse" rows="3"></textarea>'
+				clientForm += '</div>'
+				clientForm += '<div class="input-group">'
+				clientForm += '<input name="tel" type="text" class="form-control" placeholder="Téléphone" aria-describedby="basic-addon2">'
+				clientForm += '</div>'
+				clientForm += '<div class="radio">'
+				clientForm += '<label>'
+				clientForm += '<input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>'
+				clientForm += 'Livraison'
+				clientForm += '</label>'
+				clientForm += '</div>'
+				clientForm += '<div class="radio">'
+				clientForm += '<label>'
+				clientForm += '<input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">'
+				clientForm += 'À emporter'
+				clientForm += '</label>'
+				clientForm += '</div>'
+				clientForm += '</section>'
+				clientForm += '</form>'
 
+				$("#orderForm").find('.modal-body').html(orderForm + clientForm);
+				$("#orderForm").find('#submitOrderForm').show();
 				$("#orderForm").modal('show');
-
 			},
 			fail : function (){
+
 			}
 		});
 	}
@@ -108,18 +136,14 @@
 			processData : false,
 			data: $('form#orderForm').serialize(),
 			beforeSend: function(){
-				console.log('Loading...')
+				
 			},
 			success : function (response) {
-				console.log(response)
-
-				$("#orderForm")
-				.find('.modal-body')
-				.html('Order complete');
-
-
+				$("#orderForm").find('.modal-body').html('Commande envoyée!');
+				$("#orderForm").find('#submitOrderForm').hide();
 			},
 			fail : function (){
+				$("#orderForm").find('.modal-body').html('Oups!');
 			}
 		});
 	}
