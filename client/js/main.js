@@ -89,17 +89,20 @@
 				var clientForm = '<h3>Infomations</h3>'
 				clientForm += '<form id="clientForm" data-truckId="'+truck_id+'">'
 				clientForm += '<section class="order-item">'
-				clientForm += '<div class="input-group">'
+				clientForm += '<div class="form-group">'
 				clientForm += '<input name="first-name" type="text" class="form-control" placeholder="Prénom" aria-describedby="basic-addon2">'
 				clientForm += '</div>'
-				clientForm += '<div class="input-group">'
+				clientForm += '<div class="form-group">'
 				clientForm += '<input name="last-name" type="text" class="form-control" placeholder="Nom de famille" aria-describedby="basic-addon2">'
 				clientForm += '</div>'
-				clientForm += '<div class="input-group">'
+				clientForm += '<div class="form-group">'
 				clientForm += '<textarea name="address" class="form-control" placeholder="Adresse" rows="3"></textarea>'
 				clientForm += '</div>'
-				clientForm += '<div class="input-group">'
+				clientForm += '<div class="form-group">'
 				clientForm += '<input name="tel" type="text" class="form-control" placeholder="Téléphone" aria-describedby="basic-addon2">'
+				clientForm += '</div>'
+				clientForm += '<div class="form-group">'
+				clientForm += '<input name="email" type="email" class="form-control" placeholder="Courriel" aria-describedby="basic-addon2">'
 				clientForm += '</div>'
 				clientForm += '<div class="radio">'
 				clientForm += '<label>'
@@ -128,13 +131,17 @@
 
 	window.submitOrderForm = function(){
 		var truck_id = $('form#orderForm').attr("data-truckId")
+		var data = {
+			order: JSON.stringify($('form#orderForm').serializeArray()),
+			client: JSON.stringify($('form#clientForm').serializeArray())
+		}
 		$.ajax({
 			type : 'POST',
 			url : '/api/truck/'+truck_id+'/order',
 			dataType : 'json',
 			contentType : false,
 			processData : false,
-			data: $('form#orderForm').serialize(),
+			data: JSON.stringify(data),
 			beforeSend: function(){
 				
 			},
