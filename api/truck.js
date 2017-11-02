@@ -31,15 +31,28 @@ module.exports.truck=function (req, res, truck_id, callback){
                 return prev
             }, {});
 
-            var newClient="INSERT INTO clients VALUES (?, ?, ?, ?, ?, ?, ?)";
-            dbconf.connection.execute(newClient, [client.email, client.first_name, client.last_name, client.address, client.tel],function(err, result) {
+            var checkIfClientExist = "SELECT * FROM clients WHERE email = " + JSON.stringify(client.email);
+            dbconf.connection.execute(checkIfClientExist, function(err, ifClient) {
                 if (err) return callback(true);
-                createOrder(result.insertId);
+                if(ifClient.length > 0){
+                    createOrder(client.email)
+                } else {
+                    createClient()
+                }
             });
 
-            function createOrder(client_id){
-                var newOrder="INSERT INTO orders VALUES (0, ?, ?, ?, ?, ?, 'submitted')";
-                dbconf.connection.execute(newOrder, [truck_id, JSON.stringify(order), client_id, client.delivery_pickup],function(err) {
+            function createClient(){
+                var newClient="INSERT INTO clients VALUES (?, ?, ?, ?, ?)";
+                dbconf.connection.execute(newClient, [client.email, client.first_name, client.last_name, client.address, client.tel],function(err) {
+                    console.log(err)
+                    if (err) return callback(true);             
+                    createOrder(client.email);
+                });
+            }
+
+            function createOrder(client_email){
+                var newOrder="INSERT INTO orders VALUES (0, ?, ?, ?, ?, 'submitted')";
+                dbconf.connection.execute(newOrder, [truck_id, JSON.stringify(order), client_email, client.delivery_pickup],function(err) {
                     if (err) return callback(true);
                     callback(false, {'order_status': 'submitted'});
                 });

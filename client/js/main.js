@@ -119,9 +119,13 @@
 				clientForm += '</section>'
 				clientForm += '</form>'
 
-				$("#orderForm").find('.modal-body').html(orderForm + clientForm);
-				$("#orderForm").find('#submitOrderForm').show();
-				$("#orderForm").modal('show');
+				var clientFormButton = '<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button><button id="submitOrderForm" type="button" class="btn btn-primary">Placer la commande</button>';
+
+				$("#modal").find('.modal-title').html('Commander');
+				$("#modal").find('.modal-body').html(orderForm + clientForm);
+				$("#modal").find('.modal-footer').html(clientFormButton);
+				$("#modal").find('#submitOrderForm').show();
+				$("#modal").modal('show');
 			},
 			fail : function (){
 
@@ -146,11 +150,73 @@
 				
 			},
 			success : function (response) {
-				$("#orderForm").find('.modal-body').html('Commande envoyée!');
-				$("#orderForm").find('#submitOrderForm').hide();
+				$("#modal").find('.modal-body').html('Commande envoyée!');
+				$("#modal").find('#submitOrderForm').hide();
 			},
 			fail : function (){
-				$("#orderForm").find('.modal-body').html('Oups!');
+				$("#modal").find('.modal-body').html('Oups!');
+			}
+		});
+	}
+
+	window.getMyOrders = function(){
+		$("#modal").modal('hide');
+		
+		var getMyOrdersForm = '<form id="getMyOrdersForm">'
+		getMyOrdersForm += '<div class="form-group">'
+		getMyOrdersForm += '<label class="sr-only" for="exampleInputAmount">Courriel</label>'
+		getMyOrdersForm += '<div class="input-group">'
+		getMyOrdersForm += '<div class="input-group-addon">@</div>'
+		getMyOrdersForm += '<input type="text" class="form-control" id="email" placeholder="Courriel">'
+		getMyOrdersForm += '</div>'
+		getMyOrdersForm += '</div>'
+		getMyOrdersForm += '</form>'
+
+		var clientFormButton = '<button id="submitGetMyOrders" type="button" class="btn btn-primary">Obtenir mes commandes</button>';
+
+		$("#modal").find('.modal-title').html('Obtenir mes commandes');
+		$("#modal").find('.modal-body').html(getMyOrdersForm);
+		$("#modal").find('.modal-footer').html(clientFormButton);
+		$("#modal").modal('show');
+	}
+
+	window.getMyOrdersSubmit = function(){
+		$.ajax({
+			type : 'GET',
+			url : '/api/orders',
+			dataType : 'json',
+			contentType : false,
+			processData : false,
+			beforeSend: function(){
+
+			},
+			success : function (trucks) {
+
+				JSON.parse(trucks).map(truck => {
+					var marker = new google.maps.Marker({
+			          position: {lat: truck.lat, lng: truck.lng},
+			          map: map,
+			          title: truck.truck_name,
+			          icon: truck.normal_pin_url,
+			          clickable: true
+			        });
+			        marker.addListener('click', function() {
+			        	getTruckMenu(truck.truck_id)
+			        });
+					var element = '<div class="col-md-4 col-sm-6 col-xs-6 col-xxs-12 truck-item">'
+						element += '<a href="#" data-truckId="'+truck.truck_id+'">'
+						element += '<img src="https://lotmom.imgix.net/'+truck.truck_img+'?crop=faces&fit=crop&h=190&w=460" alt="'+truck.truck_name+'" class="img-responsive">'
+						element += '<h3 class="fh5co-work-title">'+truck.truck_name+'</h3>'
+						element += '<p>'+truck.address+'</p>'
+						element += '<p>'+truck.date+'</p>'
+						element += '<p>'+truck.formatted_date+'</p>'
+						element += '</a>'
+						element += '</div>'
+					$('#gridView').append(element);	
+				})
+			},
+			fail : function (){
+
 			}
 		});
 	}
@@ -335,6 +401,8 @@
 		getTruckMenu($(this).attr("data-truckId"))
 	}).on('click', '#submitOrderForm', function() {
 		submitOrderForm()
+	}).on('click', '#getMyOrders', function() {
+		getMyOrders()
 	});
 
 	// Document on load.

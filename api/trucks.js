@@ -1,14 +1,10 @@
 var fetch = require('node-fetch');
+var trucksData = require('./trucks-data.js');
 
 module.exports.trucks=function (req, res, callback){
     switch(req.method){
         case "GET" :
-            fetch('https://www.bestfoodtrucks.com/api/events/events/?what=&when=This%20Week&where=57&toggle=trucks')
-            .then(function(res) {
-                return res.text();
-            }).then(function(body) {
-                callback(false, body)
-            });
+            callback(false, JSON.stringify(trucksData))
         break;
     }
 }
