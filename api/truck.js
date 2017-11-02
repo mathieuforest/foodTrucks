@@ -19,25 +19,31 @@ module.exports.truck=function (req, res, truck_id, callback){
             }); 
         break;
         case "POST" :
-            console.log(JSON.parse(req.body))
             var data = JSON.parse(req.body)
-            var order = JSON.parse(data.order).reduce(function(prev, curr){
-                console.log(prev, curr)
-                return [
-                    ...prev,
-                    {
-                        [curr.name]: curr.value
-                    }
-                ]
-            }, []);
-            console.log(order)
-            var client = data.client;
-            var newOrder="INSERT INTO orders VALUES (0, ?, ?, 1, 'submitted')";
-            var newClient="INSERT INTO orders VALUES (0, ?, ?, 1, 'submitted')";
-            dbconf.connection.execute(newOrder, [truck_id,order],function(err) {
+            var order = JSON.parse(data.order).reduce((prev, curr)=>{
+                if(curr.value !== '')
+                    prev = Object.assign(prev, {[curr.name]: curr.value})
+                return prev
+            }, {});
+            var client = JSON.parse(data.client).reduce((prev, curr)=>{
+                if(curr.value !== '')
+                    prev = Object.assign(prev, {[curr.name]: curr.value})
+                return prev
+            }, {});
+
+            var newClient="INSERT INTO clients VALUES (?, ?, ?, ?, ?, ?, ?)";
+            dbconf.connection.execute(newClient, [client.email, client.first_name, client.last_name, client.address, client.tel],function(err, result) {
                 if (err) return callback(true);
-                callback(false, {'order_status': 'submitted'});
+                createOrder(result.insertId);
             });
+
+            function createOrder(client_id){
+                var newOrder="INSERT INTO orders VALUES (0, ?, ?, ?, ?, ?, 'submitted')";
+                dbconf.connection.execute(newOrder, [truck_id, JSON.stringify(order), client_id, client.delivery_pickup],function(err) {
+                    if (err) return callback(true);
+                    callback(false, {'order_status': 'submitted'});
+                });
+            }
         break;
     }
 }
