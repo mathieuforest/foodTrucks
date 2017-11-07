@@ -1117,4 +1117,7 @@ body.offcanvas #fh5co-main, body.offcanvas .fh5co-nav-toggle {
 #orderForm .input-group-addon {
   width: 30%
 }
+#modal {
+    overflow: scroll;
+}
 /*# sourceMappingURL=style.css.map */

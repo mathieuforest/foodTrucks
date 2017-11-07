@@ -44,7 +44,6 @@ module.exports.truck=function (req, res, truck_id, callback){
             function createClient(){
                 var newClient="INSERT INTO clients VALUES (?, ?, ?, ?, ?)";
                 dbconf.connection.execute(newClient, [client.email, client.first_name, client.last_name, client.address, client.tel],function(err) {
-                    console.log(err)
                     if (err) return callback(true);             
                     createOrder(client.email);
                 });

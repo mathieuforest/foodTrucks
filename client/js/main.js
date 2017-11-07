@@ -167,7 +167,7 @@
 		getMyOrdersForm += '<label class="sr-only" for="exampleInputAmount">Courriel</label>'
 		getMyOrdersForm += '<div class="input-group">'
 		getMyOrdersForm += '<div class="input-group-addon">@</div>'
-		getMyOrdersForm += '<input type="text" class="form-control" id="email" placeholder="Courriel">'
+		getMyOrdersForm += '<input type="text" class="form-control" name="email" id="email" placeholder="Courriel">'
 		getMyOrdersForm += '</div>'
 		getMyOrdersForm += '</div>'
 		getMyOrdersForm += '</form>'
@@ -183,37 +183,39 @@
 	window.getMyOrdersSubmit = function(){
 		$.ajax({
 			type : 'GET',
-			url : '/api/orders',
-			dataType : 'json',
+			url : '/api/orders?'+$('form#getMyOrdersForm').serialize(),
 			contentType : false,
 			processData : false,
 			beforeSend: function(){
-
+				$("#modal").modal('hide');
 			},
-			success : function (trucks) {
+			success : function (orders) {
+				var clientsOrder = '<div>';
+				orders.map(order => {
+					clientsOrder += '<section class="order-item">'
+					clientsOrder += '<h5>Numéro de commande: <span class="label label-default">'+order.id+'</span></h5>'
+					clientsOrder += '<p>'+order.truck_id+'</p>'
+					clientsOrder += '<ul class="list-group">'
+					order.order.map(orderItem => {
+						clientsOrder += '<li class="list-group-item">'
+						clientsOrder += '<span class="badge">'+ orderItem.qty +'</span>'
+						clientsOrder += orderItem.name + ' - ' + parseFloat(orderItem.price).toFixed(2)
+						clientsOrder += '</li>'
+					})
+					clientsOrder += '</ul>'
+					clientsOrder += '<p>'+order.delivery_pickup+'</p>'
+					clientsOrder += '<p>'+order.status+'</p>'
+					clientsOrder += '</section>'
+				})	
+				clientsOrder += '</div>'
+				
+				var myOrdersButtons = '<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>';
+				
+				$("#modal").find('.modal-title').html('Mes commandes');
+				$("#modal").find('.modal-body').html(clientsOrder);
+				$("#modal").find('.modal-footer').html(myOrdersButtons);
+				$("#modal").modal('show');
 
-				JSON.parse(trucks).map(truck => {
-					var marker = new google.maps.Marker({
-			          position: {lat: truck.lat, lng: truck.lng},
-			          map: map,
-			          title: truck.truck_name,
-			          icon: truck.normal_pin_url,
-			          clickable: true
-			        });
-			        marker.addListener('click', function() {
-			        	getTruckMenu(truck.truck_id)
-			        });
-					var element = '<div class="col-md-4 col-sm-6 col-xs-6 col-xxs-12 truck-item">'
-						element += '<a href="#" data-truckId="'+truck.truck_id+'">'
-						element += '<img src="https://lotmom.imgix.net/'+truck.truck_img+'?crop=faces&fit=crop&h=190&w=460" alt="'+truck.truck_name+'" class="img-responsive">'
-						element += '<h3 class="fh5co-work-title">'+truck.truck_name+'</h3>'
-						element += '<p>'+truck.address+'</p>'
-						element += '<p>'+truck.date+'</p>'
-						element += '<p>'+truck.formatted_date+'</p>'
-						element += '</a>'
-						element += '</div>'
-					$('#gridView').append(element);	
-				})
 			},
 			fail : function (){
 
@@ -403,6 +405,8 @@
 		submitOrderForm()
 	}).on('click', '#getMyOrders', function() {
 		getMyOrders()
+	}).on('click', '#submitGetMyOrders', function() {
+		getMyOrdersSubmit()
 	});
 
 	// Document on load.

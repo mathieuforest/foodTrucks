@@ -7,6 +7,7 @@ var multer  = require('multer'); //mutipart form data
 var upload = multer({ dest: 'uploads/' })
 var controlleurTrucks = require('./api/trucks')
 var controlleurTruck = require('./api/truck')
+var controlleurOrders = require('./api/orders')
 
 var app = express();
 var server = http.createServer(app);
@@ -29,6 +30,16 @@ app.get('/', function(req, res) {
 
 app.get('/api/trucks', function(req, res) {
 	controlleurTrucks.trucks(req, res, function(err, response){
+		if(!err){
+			res.header('Content-type','application/json');
+			res.header('Charset','utf8');
+			res.send(JSON.stringify(response));
+		}
+	});
+});
+
+app.get('/api/orders', function(req, res) {
+	controlleurOrders.orders(req, res, function(err, response){
 		if(!err){
 			res.header('Content-type','application/json');
 			res.header('Charset','utf8');
