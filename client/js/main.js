@@ -187,24 +187,24 @@
 			contentType : false,
 			processData : false,
 			beforeSend: function(){
-				$("#modal").modal('hide');
 			},
 			success : function (orders) {
 				var clientsOrder = '<div>';
 				orders.map(order => {
 					clientsOrder += '<section class="order-item">'
-					clientsOrder += '<h5>Numéro de commande: <span class="label label-default">'+order.id+'</span></h5>'
+					var method = (order.delivery_pickup==='delivery')?'Livraison':'À Emporter'
+					clientsOrder += '<h5>Numéro de commande: <span class="label label-default">'+order.id+'</span>  <span class="label label-primary">'+method+'</span></h5>'
 					clientsOrder += '<p>'+order.truck_id+'</p>'
 					clientsOrder += '<ul class="list-group">'
 					order.order.map(orderItem => {
 						clientsOrder += '<li class="list-group-item">'
 						clientsOrder += '<span class="badge">'+ orderItem.qty +'</span>'
-						clientsOrder += orderItem.name + ' - ' + parseFloat(orderItem.price).toFixed(2)
+						clientsOrder += orderItem.name + ' - ' + parseFloat(orderItem.price).toFixed(2) +' $'
 						clientsOrder += '</li>'
 					})
 					clientsOrder += '</ul>'
-					clientsOrder += '<p>'+order.delivery_pickup+'</p>'
-					clientsOrder += '<p>'+order.status+'</p>'
+					var status = (order.status==='submitted')?"En préparation":"Prête"
+					clientsOrder += '<div class="alert alert-success" role="alert">'+status+'</div>'
 					clientsOrder += '</section>'
 				})	
 				clientsOrder += '</div>'
