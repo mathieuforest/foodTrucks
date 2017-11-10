@@ -35,8 +35,8 @@ module.exports.orders=function (req, res, callback){
             } 
 
             function buildOrdersData(ordersData, menuData){
-                return new Promise(function(resolve, reject) {
-                    var formatedOrdersData = ordersData.map(order=>{
+                return new Promise(async function(resolve, reject) {
+                    var formatedOrdersData = await Promise.all(ordersData.map(async (order)=>{
                         var orderObject = JSON.parse(order.order);
                         return {
                             id: order.id,
@@ -50,14 +50,11 @@ module.exports.orders=function (req, res, callback){
                                 })
                                 return itemData[0];
                             }),
-                            truck_data: getTruckData(order.truck_id).then(truckData=>{
-                                console.log(truckData[0])
-                                return truckData[0];
-                            }),
+                            truck_data: await getTruckData(order.truck_id),
                             delivery_pickup: order.delivery_pickup,
                             status: order.status
                         }
-                    })
+                    }))
                     resolve(formatedOrdersData);
                 })    
             }

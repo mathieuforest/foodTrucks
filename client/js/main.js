@@ -189,12 +189,13 @@
 			beforeSend: function(){
 			},
 			success : function (orders) {
-				var clientsOrder = '<div>';
+				var clientsOrder = '<div id="getMyOrdersList">';
 				orders.map(order => {
 					clientsOrder += '<section class="order-item">'
 					var method = (order.delivery_pickup==='delivery')?'Livraison':'À Emporter'
 					clientsOrder += '<h5>Numéro de commande: <span class="label label-default">'+order.id+'</span>  <span class="label label-primary">'+method+'</span></h5>'
-					clientsOrder += '<p>'+order.truck_id+'</p>'
+					clientsOrder += '<h6>'+order.truck_data[0].name+'</h6>'
+					clientsOrder += '<img src="'+order.truck_data[0].truck_img_url+'?crop=faces&fit=crop&h=190&w=460" width="100%" />'
 					clientsOrder += '<ul class="list-group">'
 					order.order.map(orderItem => {
 						clientsOrder += '<li class="list-group-item">'
@@ -245,7 +246,6 @@
 	};
 
 	var fullHeight = function() {
-
 		$('#gridView').css('height', $(window).height());
 		$(window).resize(function(){
 			$('#gridView').css('height', $(window).height());
@@ -255,7 +255,6 @@
 		$(window).resize(function(){
 			$('.js-fullheight').css('height', $(window).height());
 		});
-
 	};
 
 	var parallax = function() {
@@ -355,26 +354,18 @@
 				$('body').addClass('offcanvas');	
 			}
 		});
-
-
-
 	};
 
 	// Click outside of offcanvass
 	var mobileMenuOutsideClick = function() {
-
 		$(document).click(function (e) {
-	    var container = $("#fh5co-aside, .js-fh5co-nav-toggle");
-	    if (!container.is(e.target) && container.has(e.target).length === 0) {
-
-	    	if ( $('body').hasClass('offcanvas') ) {
-
-    			$('body').removeClass('offcanvas');
-    			$('.js-fh5co-nav-toggle').removeClass('active');
-			
-	    	}
-	    	
-	    }
+		    var container = $("#fh5co-aside, .js-fh5co-nav-toggle");
+		    if (!container.is(e.target) && container.has(e.target).length === 0) {
+		    	if ( $('body').hasClass('offcanvas') ) {
+	    			$('body').removeClass('offcanvas');
+	    			$('.js-fh5co-nav-toggle').removeClass('active');
+		    	}
+		    }
 		});
 
 		$(window).scroll(function(){
