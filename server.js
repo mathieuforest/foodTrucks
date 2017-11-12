@@ -8,6 +8,7 @@ var upload = multer({ dest: 'uploads/' })
 var controlleurTrucks = require('./api/trucks')
 var controlleurTruck = require('./api/truck')
 var controlleurOrders = require('./api/orders')
+var controlleurClients = require('./api/clients')
 
 var app = express();
 var server = http.createServer(app);
@@ -62,6 +63,17 @@ app.get('/api/truck/:id/menu', function(req, res) {
 app.post('/api/truck/:id/order', function(req, res) {
 	var id = req.params.id;
 	controlleurTruck.truck(req, res, id, function(err, response){
+		if(!err){
+			res.header('Content-type','application/json');
+			res.header('Charset','utf8');
+			res.send(JSON.stringify(response));
+		}
+	});
+});
+
+app.post('/api/login', function(req, res) {
+	var id = req.params.id;
+	controlleurClients.client(req, res, function(err, response){
 		if(!err){
 			res.header('Content-type','application/json');
 			res.header('Charset','utf8');

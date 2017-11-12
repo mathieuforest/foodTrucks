@@ -64,8 +64,7 @@
 			dataType : 'json',
 			contentType : false,
 			processData : false,
-			beforeSend: function(){
-				
+			beforeSend: function(){	
 			},
 			success : function (response) {
 				var orderForm = '<section>'
@@ -159,28 +158,89 @@
 		});
 	}
 
-	window.getMyOrders = function(){
-		$("#modal").modal('hide');
+	window.logIn = function(){
 		
-		var getMyOrdersForm = '<form id="getMyOrdersForm">'
-		getMyOrdersForm += '<div class="form-group">'
-		getMyOrdersForm += '<label class="sr-only" for="exampleInputAmount">Courriel</label>'
-		getMyOrdersForm += '<div class="input-group">'
-		getMyOrdersForm += '<div class="input-group-addon">@</div>'
-		getMyOrdersForm += '<input type="text" class="form-control" name="email" id="email" placeholder="Courriel">'
-		getMyOrdersForm += '</div>'
-		getMyOrdersForm += '</div>'
-		getMyOrdersForm += '</form>'
+		var logInForm = '<form id="logInForm">'
+		logInForm += '<div class="form-group">'
+		logInForm += '<label class="sr-only" for="exampleInputAmount">Courriel</label>'
+		logInForm += '<div class="input-group">'
+		logInForm += '<div class="input-group-addon">@</div>'
+		logInForm += '<input type="text" class="form-control" name="email" id="email" placeholder="Courriel">'
+		logInForm += '</div>'
+		logInForm += '<label class="sr-only" for="exampleInputAmount">Mot de passe</label>'
+		logInForm += '<div class="input-group">'
+		logInForm += '<div class="input-group-addon">@</div>'
+		logInForm += '<input type="text" class="form-control" name="password" id="password" placeholder="Mot de passe">'
+		logInForm += '</div>'
+		logInForm += '</div>'
+		logInForm += '</form>'
 
-		var clientFormButton = '<button id="submitGetMyOrders" type="button" class="btn btn-primary">Obtenir mes commandes</button>';
+		var logInFormButton = '<button id="submitLogIn" type="button" class="btn btn-primary">Se connecter</button>';
 
-		$("#modal").find('.modal-title').html('Obtenir mes commandes');
-		$("#modal").find('.modal-body').html(getMyOrdersForm);
-		$("#modal").find('.modal-footer').html(clientFormButton);
+		$("#modal").find('.modal-title').html('Se connecter');
+		$("#modal").find('.modal-body').html(logInForm);
+		$("#modal").find('.modal-footer').html(logInFormButton);
 		$("#modal").modal('show');
 	}
 
-	window.getMyOrdersSubmit = function(){
+	window.submitLogIn = function(){
+		
+		$.ajax({
+			type : 'POST',
+			url : '/api/login',
+			data: JSON.stringify($('form#logInForm').serializeArray()),
+			contentType: "application/json; charset=utf-8",
+    		dataType: "json",
+			beforeSend: function(){
+			},
+			success : function (logInResponse) {
+				var response = 'Connecté!';
+				var responseButtons = '<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>';				
+				$("#modal").find('.modal-title').html('Se connecter');
+				$("#modal").find('.modal-body').html(response);
+				$("#modal").find('.modal-footer').html(responseButtons);
+				$("#modal").modal('show');
+				setTimeout(function(){
+					$("#modal").modal('hide');
+				}, 2000)
+			},
+			fail : function (err){
+				var response = 'Oups! Il y a eu un problème.';
+				var responseButtons = '<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>';				
+				$("#modal").find('.modal-title').html('Se connecter');
+				$("#modal").find('.modal-body').html(response);
+				$("#modal").find('.modal-footer').html(responseButtons);
+				$("#modal").modal('show');
+				setTimeout(function(){
+					logIn();
+				}, 5000)
+			}
+		});
+
+		var logInForm = '<form id="logInForm">'
+		logInForm += '<div class="form-group">'
+		logInForm += '<label class="sr-only" for="exampleInputAmount">Courriel</label>'
+		logInForm += '<div class="input-group">'
+		logInForm += '<div class="input-group-addon">@</div>'
+		logInForm += '<input type="text" class="form-control" name="email" id="email" placeholder="Courriel">'
+		logInForm += '</div>'
+		logInForm += '<label class="sr-only" for="exampleInputAmount">Mot de passe</label>'
+		logInForm += '<div class="input-group">'
+		logInForm += '<div class="input-group-addon">@</div>'
+		logInForm += '<input type="text" class="form-control" name="password" id="password" placeholder="Mot de passe">'
+		logInForm += '</div>'
+		logInForm += '</div>'
+		logInForm += '</form>'
+
+		var logInFormButton = '<button id="submitLogIn" type="button" class="btn btn-primary">Se connecter</button>';
+
+		$("#modal").find('.modal-title').html('Se connecter');
+		$("#modal").find('.modal-body').html(logInForm);
+		$("#modal").find('.modal-footer').html(logInFormButton);
+		$("#modal").modal('show');
+	}
+
+	window.getMyOrders = function(){
 		$.ajax({
 			type : 'GET',
 			url : '/api/orders?'+$('form#getMyOrdersForm').serialize(),
@@ -212,6 +272,7 @@
 				
 				var myOrdersButtons = '<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>';
 				
+				$("#modal").modal('show');
 				$("#modal").find('.modal-title').html('Mes commandes');
 				$("#modal").find('.modal-body').html(clientsOrder);
 				$("#modal").find('.modal-footer').html(myOrdersButtons);
@@ -286,11 +347,8 @@
 	var contentWayPoint = function() {
 		var i = 0;
 		$('.animate-box').waypoint( function( direction ) {
-
 			if( direction === 'down' && !$(this.element).hasClass('animated') ) {
-				
 				i++;
-
 				$(this.element).addClass('item-animate');
 				setTimeout(function(){
 
@@ -311,11 +369,8 @@
 							el.removeClass('item-animate');
 						},  k * 200, 'easeInOutExpo' );
 					});
-					
 				}, 100);
-				
 			}
-
 		} , { offset: '85%' } );
 	};
 
@@ -329,8 +384,7 @@
 
 	var counterWayPoint = function() {
 		if ($('#counter-animate').length > 0 ) {
-			$('#counter-animate').waypoint( function( direction ) {
-										
+			$('#counter-animate').waypoint( function( direction ) {	
 				if( direction === 'down' && !$(this.element).hasClass('animated') ) {
 					setTimeout( counter , 400);					
 					$(this.element).addClass('animated');
@@ -341,7 +395,6 @@
 	};
 
 	var burgerMenu = function() {
-
 		$('.js-fh5co-nav-toggle').on('click', function(event){
 			event.preventDefault();
 			var $this = $(this);
@@ -367,7 +420,6 @@
 		    	}
 		    }
 		});
-
 		$(window).scroll(function(){
 			if ( $('body').hasClass('offcanvas') ) {
     			$('body').removeClass('offcanvas');
@@ -375,7 +427,6 @@
 			
 	    	}
 		});
-
 	};
 
 	$(document).on('click', '.toggleGridView', function(){
@@ -396,8 +447,10 @@
 		submitOrderForm()
 	}).on('click', '#getMyOrders', function() {
 		getMyOrders()
-	}).on('click', '#submitGetMyOrders', function() {
-		getMyOrdersSubmit()
+	}).on('click', '#logIn', function() {
+		logIn();
+	}).on('click', '#submitLogIn', function() {
+		submitLogIn();
 	});
 
 	// Document on load.
