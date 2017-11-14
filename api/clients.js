@@ -12,11 +12,13 @@ module.exports.client = async function (req, res, callback){
                 var requeteClient="SELECT * FROM clients WHERE email = " + JSON.stringify(req.body[0].value);
                 const clientData = await mysql.createConnection(dbconf.dbconfig).then( async (connection) => { return await connection.execute(requeteClient)});
                 if(clientData[0].length === 0){
-                    callback(false, 'Courriel introuvable')
+                    callback(true, [{error: 'Courriel introuvable'}])
                 } else if(clientData[0][0].password !== req.body[1].value){
-                    callback(false, 'Mauvais mot de passe')
+                    callback(true, [{error: 'Mauvais mot de passe'}])
                 } else if(clientData[0][0].password === req.body[1].value){
-                    callback(false, clientData[0])
+                    var response = Object.assign({}, clientData[0][0]);
+                    delete response.password;
+                    callback(false, [response])
                 }
 
             break;

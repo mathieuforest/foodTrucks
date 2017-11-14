@@ -2,6 +2,8 @@
 	
 	'use strict';
 
+	window.appData = {};
+
 	var gridView = true, mapView = false;
 
 	window.getTrucks = function(){
@@ -152,29 +154,28 @@
 				$("#modal").find('.modal-body').html('Commande envoyée!');
 				$("#modal").find('#submitOrderForm').hide();
 			},
-			fail : function (){
+			error : function (){
 				$("#modal").find('.modal-body').html('Oups!');
 			}
 		});
 	}
 
 	window.logIn = function(){
-		
+
 		var logInForm = '<form id="logInForm">'
 		logInForm += '<div class="form-group">'
 		logInForm += '<label class="sr-only" for="exampleInputAmount">Courriel</label>'
 		logInForm += '<div class="input-group">'
-		logInForm += '<div class="input-group-addon">@</div>'
+		logInForm += '<div class="input-group-addon">Courriel</div>'
 		logInForm += '<input type="text" class="form-control" name="email" id="email" placeholder="Courriel">'
 		logInForm += '</div>'
 		logInForm += '<label class="sr-only" for="exampleInputAmount">Mot de passe</label>'
 		logInForm += '<div class="input-group">'
-		logInForm += '<div class="input-group-addon">@</div>'
-		logInForm += '<input type="text" class="form-control" name="password" id="password" placeholder="Mot de passe">'
+		logInForm += '<div class="input-group-addon">Mot de passe</div>'
+		logInForm += '<input type="password" class="form-control" name="password" id="password" placeholder="Mot de passe">'
 		logInForm += '</div>'
 		logInForm += '</div>'
 		logInForm += '</form>'
-
 		var logInFormButton = '<button id="submitLogIn" type="button" class="btn btn-primary">Se connecter</button>';
 
 		$("#modal").find('.modal-title').html('Se connecter');
@@ -193,57 +194,33 @@
     		dataType: "json",
 			beforeSend: function(){
 			},
-			success : function (logInResponse) {
+			success : function (response) {
+				appData.client = response[0];
+				updateMenu();
 				var response = 'Connecté!';
 				var responseButtons = '<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>';				
 				$("#modal").find('.modal-title').html('Se connecter');
 				$("#modal").find('.modal-body').html(response);
 				$("#modal").find('.modal-footer').html(responseButtons);
-				$("#modal").modal('show');
 				setTimeout(function(){
 					$("#modal").modal('hide');
-				}, 2000)
+				}, 1000)
 			},
-			fail : function (err){
-				var response = 'Oups! Il y a eu un problème.';
-				var responseButtons = '<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>';				
-				$("#modal").find('.modal-title').html('Se connecter');
-				$("#modal").find('.modal-body').html(response);
+			error: function (err){
+				var responseButtons = '<button id="logIn" type="button" class="btn btn-default" data-dismiss="modal">Réessayer</button>';
+				$("#modal").find('.modal-title').html('Oups! Il y a eu un problème.');
+				$("#modal").find('.modal-body').html(JSON.parse(err.responseText)[0].error);
 				$("#modal").find('.modal-footer').html(responseButtons);
-				$("#modal").modal('show');
-				setTimeout(function(){
-					logIn();
-				}, 5000)
 			}
 		});
 
-		var logInForm = '<form id="logInForm">'
-		logInForm += '<div class="form-group">'
-		logInForm += '<label class="sr-only" for="exampleInputAmount">Courriel</label>'
-		logInForm += '<div class="input-group">'
-		logInForm += '<div class="input-group-addon">@</div>'
-		logInForm += '<input type="text" class="form-control" name="email" id="email" placeholder="Courriel">'
-		logInForm += '</div>'
-		logInForm += '<label class="sr-only" for="exampleInputAmount">Mot de passe</label>'
-		logInForm += '<div class="input-group">'
-		logInForm += '<div class="input-group-addon">@</div>'
-		logInForm += '<input type="text" class="form-control" name="password" id="password" placeholder="Mot de passe">'
-		logInForm += '</div>'
-		logInForm += '</div>'
-		logInForm += '</form>'
-
-		var logInFormButton = '<button id="submitLogIn" type="button" class="btn btn-primary">Se connecter</button>';
-
-		$("#modal").find('.modal-title').html('Se connecter');
-		$("#modal").find('.modal-body').html(logInForm);
-		$("#modal").find('.modal-footer').html(logInFormButton);
-		$("#modal").modal('show');
 	}
 
 	window.getMyOrders = function(){
 		$.ajax({
 			type : 'GET',
-			url : '/api/orders?'+$('form#getMyOrdersForm').serialize(),
+			url : '/api/orders',
+			data: 'email='+appData.client.email,
 			contentType : false,
 			processData : false,
 			beforeSend: function(){
@@ -283,6 +260,12 @@
 
 			}
 		});
+	}
+
+	window.updateMenu = function(){
+		if(appData.hasOwnProperty('client')){
+			$('#logIn').html('Se déconnecter').attr('id', 'logOut');
+		}
 	}
 
 	var isMobile = {
@@ -448,7 +431,10 @@
 	}).on('click', '#getMyOrders', function() {
 		getMyOrders()
 	}).on('click', '#logIn', function() {
-		logIn();
+		$("#modal").modal('hide');
+		setTimeout(function(){
+			logIn();
+		},500)
 	}).on('click', '#submitLogIn', function() {
 		submitLogIn();
 	});

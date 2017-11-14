@@ -78,6 +78,10 @@ app.post('/api/login', function(req, res) {
 			res.header('Content-type','application/json');
 			res.header('Charset','utf8');
 			res.send(JSON.stringify(response));
+		}else{
+			res.header('Content-type','application/json');
+			res.header('Charset','utf8');
+			res.status(404).send(JSON.stringify(response));
 		}
 	});
 });
