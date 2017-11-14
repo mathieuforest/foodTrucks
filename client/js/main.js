@@ -79,56 +79,68 @@
 					orderForm += '<section class="order-item">'
 					orderForm += '<h3>'+truckMenuItem.name+'</h3>'
 					orderForm += '<p>'+truckMenuItem.desc+'</p>'
-					orderForm += '<div class="input-group">'
-					orderForm += '<input name="'+truckMenuItem.id+'" type="text" class="form-control" placeholder="Quantité" aria-describedby="basic-addon2">'
-					orderForm += '<span class="input-group-addon" id="basic-addon2">x '+truckMenuItem.price.toFixed(2)+' $</span>'
-					orderForm += '</div>'
+					if(appData.hasOwnProperty('client')){
+						orderForm += '<div class="input-group">'
+						orderForm += '<input name="'+truckMenuItem.id+'" type="text" class="form-control" placeholder="Quantité" aria-describedby="basic-addon2">'
+						orderForm += '<span class="input-group-addon" id="basic-addon2">x '+truckMenuItem.price.toFixed(2)+' $</span>'
+						orderForm += '</div>'
+					}
 					orderForm += '</section>'
 				})
 				orderForm += '</form>'
 
-				var clientForm = '<h3>Infomations</h3>'
-				clientForm += '<form id="clientForm" data-truckId="'+truck_id+'">'
-				clientForm += '<section class="order-item">'
-				clientForm += '<div class="form-group">'
-				clientForm += '<input name="first_name" type="text" class="form-control" placeholder="Prénom" aria-describedby="basic-addon2">'
-				clientForm += '</div>'
-				clientForm += '<div class="form-group">'
-				clientForm += '<input name="last_name" type="text" class="form-control" placeholder="Nom de famille" aria-describedby="basic-addon2">'
-				clientForm += '</div>'
-				clientForm += '<div class="form-group">'
-				clientForm += '<textarea name="address" class="form-control" placeholder="Adresse" rows="3"></textarea>'
-				clientForm += '</div>'
-				clientForm += '<div class="form-group">'
-				clientForm += '<input name="tel" type="text" class="form-control" placeholder="Téléphone" aria-describedby="basic-addon2">'
-				clientForm += '</div>'
-				clientForm += '<div class="form-group">'
-				clientForm += '<input name="email" type="email" class="form-control" placeholder="Courriel" aria-describedby="basic-addon2">'
-				clientForm += '</div>'
-				clientForm += '<div class="radio">'
-				clientForm += '<label>'
-				clientForm += '<input type="radio" name="delivery_pickup" id="optionsRadios1" value="delivery" checked>'
-				clientForm += 'Livraison'
-				clientForm += '</label>'
-				clientForm += '</div>'
-				clientForm += '<div class="radio">'
-				clientForm += '<label>'
-				clientForm += '<input type="radio" name="delivery_pickup" id="optionsRadios2" value="pickup">'
-				clientForm += 'À emporter'
-				clientForm += '</label>'
-				clientForm += '</div>'
-				clientForm += '</section>'
-				clientForm += '</form>'
+				var clientForm = '<h3>Commander</h3>'
+				if(appData.hasOwnProperty('client')){
+					clientForm += '<form id="clientForm" data-truckId="'+truck_id+'">'
+					clientForm += '<section class="order-item">'
+					clientForm += '<div class="form-group">'
+					clientForm += '<input value="'+ appData.client.first_name +'" name="first_name" type="text" class="form-control" placeholder="Prénom" aria-describedby="basic-addon2">'
+					clientForm += '</div>'
+					clientForm += '<div class="form-group">'
+					clientForm += '<input value="'+ appData.client.last_name +'" name="last_name" type="text" class="form-control" placeholder="Nom de famille" aria-describedby="basic-addon2">'
+					clientForm += '</div>'
+					clientForm += '<div class="form-group">'
+					clientForm += '<textarea name="address" class="form-control" placeholder="Adresse" rows="3">'+ appData.client.address +'</textarea>'
+					clientForm += '</div>'
+					clientForm += '<div class="form-group">'
+					clientForm += '<input value="'+ appData.client.tel +'" name="tel" type="text" class="form-control" placeholder="Téléphone" aria-describedby="basic-addon2">'
+					clientForm += '</div>'
+					clientForm += '<div class="form-group">'
+					clientForm += '<input value="'+ appData.client.email +'" name="email" type="email" class="form-control" placeholder="Courriel" aria-describedby="basic-addon2">'
+					clientForm += '</div>'
+					clientForm += '<div class="radio">'
+					clientForm += '<label>'
+					clientForm += '<input type="radio" name="delivery_pickup" id="optionsRadios1" value="delivery" checked>'
+					clientForm += 'Livraison'
+					clientForm += '</label>'
+					clientForm += '</div>'
+					clientForm += '<div class="radio">'
+					clientForm += '<label>'
+					clientForm += '<input type="radio" name="delivery_pickup" id="optionsRadios2" value="pickup">'
+					clientForm += 'À emporter'
+					clientForm += '</label>'
+					clientForm += '</div>'
+					clientForm += '</section>'
+					clientForm += '</form>'
+				} else {
+					clientForm += '<section class="order-item">'
+					clientForm += '<h5>Connectez-vous pour commander en ligne.</h5>'
+					clientForm += '</section>'
+				}
 
-				var clientFormButton = '<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button><button id="submitOrderForm" type="button" class="btn btn-primary">Placer la commande</button>';
+				if(appData.hasOwnProperty('client')){
+					var clientFormButton = '<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button><button id="submitOrderForm" type="button" class="btn btn-primary">Placer la commande</button>';
+				} else {
+					var clientFormButton = '<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button><button id="logIn" type="button" class="btn btn-primary" data-dismiss="modal">Se connecter</button>'
+				}
 
-				$("#modal").find('.modal-title').html('Commander');
+				$("#modal").find('.modal-title').html('Menu');
 				$("#modal").find('.modal-body').html(orderForm + clientForm);
 				$("#modal").find('.modal-footer').html(clientFormButton);
 				$("#modal").find('#submitOrderForm').show();
 				$("#modal").modal('show');
 			},
-			fail : function (){
+			error : function (){
 
 			}
 		});
@@ -182,6 +194,11 @@
 		$("#modal").find('.modal-body').html(logInForm);
 		$("#modal").find('.modal-footer').html(logInFormButton);
 		$("#modal").modal('show');
+	}
+
+	window.logOut = function(){
+		delete window.appData.client
+		updateMenu();
 	}
 
 	window.submitLogIn = function(){
@@ -256,7 +273,7 @@
 				$("#modal").modal('show');
 
 			},
-			fail : function (){
+			error : function (){
 
 			}
 		});
@@ -265,6 +282,10 @@
 	window.updateMenu = function(){
 		if(appData.hasOwnProperty('client')){
 			$('#logIn').html('Se déconnecter').attr('id', 'logOut');
+			$('#getMyOrders').toggle();
+		} else {
+			$('#logOut').html('Se connecter').attr('id', 'logIn');
+			$('#getMyOrders').toggle();
 		}
 	}
 
@@ -437,6 +458,8 @@
 		},500)
 	}).on('click', '#submitLogIn', function() {
 		submitLogIn();
+	}).on('click', '#logOut', function() {
+		logOut();
 	});
 
 	// Document on load.

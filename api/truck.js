@@ -50,8 +50,10 @@ module.exports.truck=function (req, res, truck_id, callback){
             }
 
             function createOrder(client_email){
-                var newOrder="INSERT INTO orders VALUES (0, ?, ?, ?, ?, 'submitted')";
-                dbconf.connection.execute(newOrder, [truck_id, JSON.stringify(order), client_email, client.delivery_pickup],function(err) {
+                var date = new Date();
+                var newOrder="INSERT INTO orders VALUES (0, ?, ?, ?, ?, 'submitted'," + Date.now() + ")";
+                dbconf.connection.execute(newOrder, [truck_id, JSON.stringify(order), client_email, client.delivery_pickup, ],function(err) {
+                    console.log(err)
                     if (err) return callback(true);
                     callback(false, {'order_status': 'submitted'});
                 });
