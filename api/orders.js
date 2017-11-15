@@ -6,7 +6,7 @@ module.exports.orders=function (req, res, callback){
             
             function getOrdersData(){
                 return new Promise(function (resolve, reject) {
-                    var requeteOrders="SELECT * FROM orders WHERE client_email=" + JSON.stringify(req.query.email);
+                    var requeteOrders="SELECT * FROM orders WHERE client_email=" + JSON.stringify(req.query.email) + " ORDER BY date DESC";
                     dbconf.connection.execute(requeteOrders, function(err, ordersData) {
                         if (err) return reject(err);
                         resolve(ordersData);
@@ -37,7 +37,11 @@ module.exports.orders=function (req, res, callback){
             function buildOrdersData(ordersData, menuData){
                 return new Promise(async function(resolve, reject) {
                     var formatedOrdersData = await Promise.all(ordersData.map(async (order)=>{
-                        var orderObject = JSON.parse(order.order);
+                        if(order.order.length > 0){
+                            var orderObject = JSON.parse(order.order);
+                        } else {
+                            var orderObject = {};
+                        }    
                         return {
                             id: order.id,
                             order: Object.keys(orderObject).map(menuItem=>{
@@ -52,11 +56,16 @@ module.exports.orders=function (req, res, callback){
                             }),
                             truck_data: await getTruckData(order.truck_id),
                             delivery_pickup: order.delivery_pickup,
-                            status: order.status
+                            status: order.status,
+                            date: order.date
                         }
-                    }))
+                    })).catch(err => {
+                        console.log(err)
+                    })
                     resolve(formatedOrdersData);
-                })    
+                }).catch(err => {
+                    console.log(err)
+                })   
             }
 
             var ordersData, menuData; 
@@ -67,7 +76,9 @@ module.exports.orders=function (req, res, callback){
                 menuData = menuDataResponse
                 return buildOrdersData(ordersData, menuData);
             }).then(formatedOrdersData => {
-                callback(false, formatedOrdersData);
+                callback(false, formatedOrdersData); 
+            }).catch(err=>{
+                console.log(err)
             });
 
 

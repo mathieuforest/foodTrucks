@@ -9,6 +9,7 @@ var controlleurTrucks = require('./api/trucks')
 var controlleurTruck = require('./api/truck')
 var controlleurOrders = require('./api/orders')
 var controlleurClients = require('./api/clients')
+var controlleurAccount = require('./api/createAccount')
 
 var app = express();
 var server = http.createServer(app);
@@ -74,6 +75,21 @@ app.post('/api/truck/:id/order', function(req, res) {
 app.post('/api/login', function(req, res) {
 	var id = req.params.id;
 	controlleurClients.client(req, res, function(err, response){
+		if(!err){
+			res.header('Content-type','application/json');
+			res.header('Charset','utf8');
+			res.send(JSON.stringify(response));
+		}else{
+			res.header('Content-type','application/json');
+			res.header('Charset','utf8');
+			res.status(404).send(JSON.stringify(response));
+		}
+	});
+});
+
+app.post('/api/createAccount', function(req, res) {
+	var id = req.params.id;
+	controlleurAccount.account(req, res, function(err, response){
 		if(!err){
 			res.header('Content-type','application/json');
 			res.header('Charset','utf8');

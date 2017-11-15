@@ -188,12 +188,69 @@
 		logInForm += '</div>'
 		logInForm += '</div>'
 		logInForm += '</form>'
-		var logInFormButton = '<button id="submitLogIn" type="button" class="btn btn-primary">Se connecter</button>';
+		var logInFormButton = '<button id="createAccount" type="button" class="btn btn-default">Créer un compte</button><button id="submitLogIn" type="button" class="btn btn-primary">Se connecter</button>';
 
 		$("#modal").find('.modal-title').html('Se connecter');
 		$("#modal").find('.modal-body').html(logInForm);
 		$("#modal").find('.modal-footer').html(logInFormButton);
 		$("#modal").modal('show');
+	}
+
+	window.createAccount = function(){
+
+		var createAccountForm = '<form id="createAccountForm">'
+		createAccountForm += '<section class="order-item">'
+		createAccountForm += '<div class="form-group">'
+		createAccountForm += '<input name="first_name" type="text" class="form-control" placeholder="Prénom" aria-describedby="basic-addon2">'
+		createAccountForm += '</div>'
+		createAccountForm += '<div class="form-group">'
+		createAccountForm += '<input name="last_name" type="text" class="form-control" placeholder="Nom de famille" aria-describedby="basic-addon2">'
+		createAccountForm += '</div>'
+		createAccountForm += '<div class="form-group">'
+		createAccountForm += '<textarea name="address" class="form-control" placeholder="Adresse" rows="3"></textarea>'
+		createAccountForm += '</div>'
+		createAccountForm += '<div class="form-group">'
+		createAccountForm += '<input name="tel" type="text" class="form-control" placeholder="Téléphone" aria-describedby="basic-addon2">'
+		createAccountForm += '</div>'
+		createAccountForm += '<div class="form-group">'
+		createAccountForm += '<input name="email" type="email" class="form-control" placeholder="Courriel" aria-describedby="basic-addon2">'
+		createAccountForm += '</div>'
+		createAccountForm += '<div class="input-group">'
+		createAccountForm += '<div class="input-group-addon">Mot de passe</div>'
+		createAccountForm += '<input type="password" class="form-control" name="password" id="password" placeholder="Mot de passe">'
+		createAccountForm += '</div>'
+		createAccountForm += '</div>'
+		createAccountForm += '</form>'
+
+		var createAccountFormButton = '<button id="submitCreateAccount" type="button" class="btn btn-default">Créer un compte</button>';
+
+		$("#modal").find('.modal-title').html('Créer un compte');
+		$("#modal").find('.modal-body').html(createAccountForm);
+		$("#modal").find('.modal-footer').html(createAccountFormButton);
+		$("#modal").modal('show');
+	}
+
+	window.submitCreateAccount = function(){
+		$.ajax({
+			type : 'POST',
+			url : '/api/createAccount',
+			dataType : 'json',
+			contentType : false,
+			processData : false,
+			data: JSON.stringify($('form#createAccountForm').serializeArray()),
+			beforeSend: function(){
+				
+			},
+			success : function (response) {
+				$("#modal").find('.modal-body').html('Compte créé!');
+				$setTimeout(function(){
+					$("#modal").modal('hide');
+				}, 1000)
+			},
+			error : function (){
+				
+			}
+		});
 	}
 
 	window.logOut = function(){
@@ -247,7 +304,8 @@
 				orders.map(order => {
 					clientsOrder += '<section class="order-item">'
 					var method = (order.delivery_pickup==='delivery')?'Livraison':'À Emporter'
-					clientsOrder += '<h5>Numéro de commande: <span class="label label-default">'+order.id+'</span>  <span class="label label-primary">'+method+'</span></h5>'
+					var date = (typeof order.date === 'string') ? order.date.replace('T', ' ').substring(0, order.date.length - 8) : '';
+					clientsOrder += '<h5>Numéro de commande: <span class="label label-default">'+order.id+'</span>  <span class="label label-primary">'+method+'</span>  <span class="label label-default">'+ date +'</span></h5>'
 					clientsOrder += '<h6>'+order.truck_data[0].name+'</h6>'
 					clientsOrder += '<img src="'+order.truck_data[0].truck_img_url+'?crop=faces&fit=crop&h=190&w=460" width="100%" />'
 					clientsOrder += '<ul class="list-group">'
@@ -460,6 +518,10 @@
 		submitLogIn();
 	}).on('click', '#logOut', function() {
 		logOut();
+	}).on('click', '#createAccount', function() {
+		createAccount();
+	}).on('click', '#submitCreateAccount', function() {
+		submitCreateAccount();
 	});
 
 	// Document on load.

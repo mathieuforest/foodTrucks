@@ -50,8 +50,8 @@ module.exports.truck=function (req, res, truck_id, callback){
             }
 
             function createOrder(client_email){
-                var date = new Date();
-                var newOrder="INSERT INTO orders VALUES (0, ?, ?, ?, ?, 'submitted'," + Date.now() + ")";
+                var date = new Date().toISOString().slice(0, 19).replace('T', ' ');
+                var newOrder="INSERT INTO orders VALUES (0, ?, ?, ?, ?, 'submitted','" + date + "')";
                 dbconf.connection.execute(newOrder, [truck_id, JSON.stringify(order), client_email, client.delivery_pickup, ],function(err) {
                     console.log(err)
                     if (err) return callback(true);
