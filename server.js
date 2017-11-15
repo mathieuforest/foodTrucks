@@ -82,7 +82,7 @@ app.post('/api/login', function(req, res) {
 		}else{
 			res.header('Content-type','application/json');
 			res.header('Charset','utf8');
-			res.status(404).send(JSON.stringify(response));
+			res.status(401).send(JSON.stringify(response));
 		}
 	});
 });
@@ -97,7 +97,7 @@ app.post('/api/createAccount', function(req, res) {
 		}else{
 			res.header('Content-type','application/json');
 			res.header('Charset','utf8');
-			res.status(404).send(JSON.stringify(response));
+			res.status(409).send(JSON.stringify(response));
 		}
 	});
 });

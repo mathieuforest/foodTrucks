@@ -130,6 +130,7 @@ figure {
   font-size: 15px;
   font-weight: 300;
   position: relative;
+  display: inline-block;
   -webkit-transition: 0.3s;
   -o-transition: 0.3s;
   transition: 0.3s;
@@ -1119,6 +1120,11 @@ body.offcanvas #fh5co-main, body.offcanvas .fh5co-nav-toggle {
 }
 #modal .input-group {
   margin-bottom: 15px;
+}
+#modal .modal-message {
+  position: relative;
+  padding: 15px;
+  text-align: right;
 }
 
 #orderForm .input-group {

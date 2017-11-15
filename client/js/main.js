@@ -160,7 +160,6 @@
 			processData : false,
 			data: JSON.stringify(data),
 			beforeSend: function(){
-				
 			},
 			success : function (response) {
 				$("#modal").find('.modal-body').html('Commande envoyée!');
@@ -173,7 +172,6 @@
 	}
 
 	window.logIn = function(){
-
 		var logInForm = '<form id="logInForm">'
 		logInForm += '<div class="form-group">'
 		logInForm += '<label class="sr-only" for="exampleInputAmount">Courriel</label>'
@@ -197,9 +195,8 @@
 	}
 
 	window.createAccount = function(){
-
 		var createAccountForm = '<form id="createAccountForm">'
-		createAccountForm += '<section class="order-item">'
+		createAccountForm += '<section>'
 		createAccountForm += '<div class="form-group">'
 		createAccountForm += '<input name="first_name" type="text" class="form-control" placeholder="Prénom" aria-describedby="basic-addon2">'
 		createAccountForm += '</div>'
@@ -239,16 +236,18 @@
 			processData : false,
 			data: JSON.stringify($('form#createAccountForm').serializeArray()),
 			beforeSend: function(){
-				
+				$("#modal").find('.modal-message').html('');
 			},
 			success : function (response) {
 				$("#modal").find('.modal-body').html('Compte créé!');
-				$setTimeout(function(){
+				appData.client = response[0];
+				updateMenu();
+				setTimeout(function(){
 					$("#modal").modal('hide');
 				}, 1000)
 			},
-			error : function (){
-				
+			error : function (err){
+				$("#modal").find('.modal-message').html(JSON.parse(err.responseText)[0].error);
 			}
 		});
 	}
@@ -259,7 +258,6 @@
 	}
 
 	window.submitLogIn = function(){
-		
 		$.ajax({
 			type : 'POST',
 			url : '/api/login',
@@ -287,7 +285,6 @@
 				$("#modal").find('.modal-footer').html(responseButtons);
 			}
 		});
-
 	}
 
 	window.getMyOrders = function(){

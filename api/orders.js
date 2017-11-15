@@ -81,8 +81,6 @@ module.exports.orders=function (req, res, callback){
                 console.log(err)
             });
 
-
-
         break;
     }
 }
