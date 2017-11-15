@@ -10,7 +10,7 @@
 
 		var mapOptions = {
             zoom: 14,
-            center: new google.maps.LatLng(45.5016889, -73.56725599999999),
+            center: new google.maps.LatLng(45.516577, -73.567586),
             mapTypeId: google.maps.MapTypeId.ROADMAP,
             disableDefaultUI: true,
             styles: [{"featureType":"administrative","elementType":"all","stylers":[{"saturation":"-100"}]},{"featureType":"administrative.province","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"landscape","elementType":"all","stylers":[{"saturation":-100},{"lightness":65},{"visibility":"on"}]},{"featureType":"poi","elementType":"all","stylers":[{"saturation":-100},{"lightness":"50"},{"visibility":"simplified"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":"-100"}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"all","stylers":[{"lightness":"30"}]},{"featureType":"road.local","elementType":"all","stylers":[{"lightness":"40"}]},{"featureType":"transit","elementType":"all","stylers":[{"saturation":-100},{"visibility":"simplified"}]},{"featureType":"water","elementType":"geometry","stylers":[{"hue":"#ffff00"},{"lightness":-25},{"saturation":-97}]},{"featureType":"water","elementType":"labels","stylers":[{"lightness":-25},{"saturation":-100}]}]
@@ -40,6 +40,7 @@
 			        });
 			        marker.addListener('click', function() {
 			        	getTruckMenu(truck.truck_id)
+			        	console.log(truck)
 			        });
 					var element = '<div class="col-md-4 col-sm-6 col-xs-6 col-xxs-12 truck-item">'
 						element += '<a href="#" data-truckId="'+truck.truck_id+'">'
