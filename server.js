@@ -13,7 +13,7 @@ var controlleurAccount = require('./api/createAccount')
 
 var app = express();
 var server = http.createServer(app);
-server.listen(port);
+server.listen(8080);
 
 app.use(express.static(__dirname));//to get also css, js,...
 app.use(bodyParser.json()); // support json encoded bodies
