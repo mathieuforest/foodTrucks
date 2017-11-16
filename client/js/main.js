@@ -401,9 +401,7 @@
 		});
 	};
 
-
 	// Animations
-
 	var contentWayPoint = function() {
 		var i = 0;
 		$('.animate-box').waypoint( function( direction ) {
@@ -520,6 +518,8 @@
 		createAccount();
 	}).on('click', '#submitCreateAccount', function() {
 		submitCreateAccount();
+	}).on('change resize ready', function() {
+		$('#map').css('height', $(window).height())
 	});
 
 	// Document on load.

@@ -118,7 +118,6 @@ figure {
   }
 }
 #fh5co-aside #fh5co-main-menu ul li {
-  margin: 0 0 10px 0;
   padding: 0;
   list-style: none;
 }
@@ -261,46 +260,6 @@ body.offcanvas #fh5co-main, body.offcanvas .fh5co-nav-toggle {
   -ms-transform: translateX(270px);
   -o-transform: translateX(270px);
   transform: translateX(270px);
-}
-
-.toggle-view {
-  position: absolute;
-  z-index: 99999;
-  top: 20px;
-  right: 20px;
-}
-.truck-item {
-  margin-bottom: 30px;
-  background: rgba(255, 255, 255, 0.8);
-  padding: 30px 15px;
-}
-.truck-item a {
-  border: none;
-  text-align: center;
-}
-.truck-item a img {
-  margin-bottom: 10px;
-  float: left;
-  border: 10px solid transparent;
-  -webkit-transition: 0.5s;
-  -o-transition: 0.5s;
-  transition: 0.5s;
-}
-.truck-item a h3 {
-  font-size: 20px;
-  color: #000;
-  margin-bottom: 10px;
-}
-.truck-item a p {
-  font-size: 14px;
-  color: #888;
-  margin-bottom: 0;
-}
-.truck-item a:hover, .truck-item a:active, .truck-item a:focus {
-  text-decoration: none;
-}
-.truck-item a:hover img, .truck-item a:active img, .truck-item a:focus img {
-  border: 10px solid #000;
 }
 
 .fh5co-services {
@@ -617,7 +576,7 @@ body.offcanvas #fh5co-main, body.offcanvas .fh5co-nav-toggle {
 
 .fh5co-heading {
   font-size: 45px;
-  margin-bottom: 0.8em;
+  margin-bottom: 0;
   margin-left: 1.1em;
 }
 .fh5co-heading.fh5co-light {
@@ -628,6 +587,7 @@ body.offcanvas #fh5co-main, body.offcanvas .fh5co-nav-toggle {
 }
 @media screen and (max-width: 768px) {
   .fh5co-heading {
+    display: none;
     font-size: 30px;
     margin-bottom: 1em;
   }
@@ -1098,14 +1058,65 @@ body.offcanvas #fh5co-main, body.offcanvas .fh5co-nav-toggle {
   opacity: 0;
 }
 
+/* Custom */
+
 #gridView {
+  margin-top: 20px;
   overflow: scroll;
 }
+@media screen and (max-width: 768px) {
+  #gridView {
+    margin-top: 70px;
+  }
+}
 
-/* Custom */
+.toggle-view {
+  position: fixed;
+  z-index: 99999;
+  top: 20px;
+  right: 20px;
+}
+.truck-item {
+  margin-bottom: 30px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 30px 15px;
+}
+.truck-item a {
+  border: none;
+  text-align: center;
+}
+.truck-item a img {
+  margin-bottom: 10px;
+  float: left;
+  border: 10px solid transparent;
+  -webkit-transition: 0.5s;
+  -o-transition: 0.5s;
+  transition: 0.5s;
+}
+.truck-item a h3 {
+  font-size: 20px;
+  color: #000;
+  margin-bottom: 10px;
+}
+.truck-item a p {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 0;
+}
+.truck-item a:hover, .truck-item a:active, .truck-item a:focus {
+  text-decoration: none;
+}
+.truck-item a:hover img, .truck-item a:active img, .truck-item a:focus img {
+  border: 10px solid #000;
+}
 
 #modal {
     overflow: scroll;
+}
+@media screen and (max-width: 768px) {
+  #modal {
+    z-index: 99999;
+  }
 }
 #modal section {
   margin-bottom: 15px;
@@ -1129,6 +1140,11 @@ body.offcanvas #fh5co-main, body.offcanvas .fh5co-nav-toggle {
 
 #orderForm .input-group {
   width: 50%;
+}
+@media screen and (max-width: 768px) {
+  #orderForm .input-group {
+    width: 70%;
+  }
 }
 
 #getMyOrdersForm .input-group {
